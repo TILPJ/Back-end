@@ -4,8 +4,9 @@
 
 # Tech Stack
 - Language : Python 3.8.10
-- Web Framework : Django 3.2.3, Django rest framework
--  
+- Web Framework : Django 3.2.3, Django rest framework 3.2.3
+- Database : PostgreSQL 13
+- 
 
 # 개발 환경 및 개발 기간
 - OS : MacOS
