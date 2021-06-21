@@ -1,9 +1,12 @@
+from rest_framework import response
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
-from rest_auth.views import LoginView
+from rest_framework import status
+from rest_framework.views import APIView
 
-from .serializers import CustomUser
+from .models import CustomUser
+from .serializers import UserCheckSerializer
 
 
 @api_view(["GET"])
@@ -24,3 +27,11 @@ def api_root(request, format=None):
             ),
         }
     )
+
+
+# 회원 여부 체크
+class UserCheck(APIView):
+    def get(self, request, email, format=None):
+        email = CustomUser.objects.filter(email=email)
+        serializer = UserCheckSerializer(email)
+        return Response(serializer.data)
