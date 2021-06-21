@@ -1,3 +1,5 @@
+import jsend
+
 from rest_framework import response
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -30,8 +32,16 @@ def api_root(request, format=None):
 
 
 # 회원 여부 체크
+# class UserCheck(APIView):
+#     def get(self, request, email, format=None):
+#         email = CustomUser.objects.filter(email=email)
+#         serializer = UserCheckSerializer(email)
+#         return Response(serializer.data)
+
+
 class UserCheck(APIView):
     def get(self, request, email, format=None):
         email = CustomUser.objects.filter(email=email)
         serializer = UserCheckSerializer(email)
-        return Response(serializer.data)
+        res = jsend.success(data=serializer.data)
+        return Response(res)
