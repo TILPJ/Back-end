@@ -45,6 +45,7 @@ DJANGO_APPS = [
     "allauth",
     "allauth.account",
     "rest_auth.registration",
+    "drf_yasg",
 ]
 
 PROJECT_APPS = [
