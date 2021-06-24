@@ -153,8 +153,12 @@ GRAPH_MODELS = {
 AUTH_USER_MODEL = "accounts.CustomUser"
 
 REST_AUTH_SERIALIZERS = {
-    "USER_DETAILS_SERIALIZER": "accounts.serializers.UserSerializer",
+    "USER_DETAILS_SERIALIZER": "accounts.serializers.UserDetailSerializer",
     "LOGIN_SERIALIZER": "accounts.serializers.LoginSerializer",
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    "REGISTER_SERIALIZER": "accounts.serializers.RegisterSerializer",
 }
 
 # DJANGO ALL-AUTH CONFIGURATION

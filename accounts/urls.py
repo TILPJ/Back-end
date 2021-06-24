@@ -6,9 +6,9 @@ from rest_auth.views import (
     PasswordResetConfirmView,
     UserDetailsView,
 )
-from rest_auth.registration.views import RegisterView
 
 from .views import UserCheck, LoginView, LogoutView
+from .views import RegisterView
 
 urlpatterns = [
     path(

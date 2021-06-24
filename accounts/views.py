@@ -10,7 +10,12 @@ from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
+
+from allauth.account import app_settings as allauth_settings
+from rest_auth.app_settings import TokenSerializer
+
 from rest_auth.views import LoginView, LogoutView
+from rest_auth.registration.views import RegisterView
 
 from .models import CustomUser
 from .serializers import UserCheckSerializer
@@ -108,3 +113,19 @@ class LogoutView(LogoutView):
             if jwt_settings.JWT_AUTH_COOKIE:
                 response.delete_cookie(jwt_settings.JWT_AUTH_COOKIE)
         return response
+
+
+# rest_auth.registration.views.RegisterView overriding
+class RegisterView(RegisterView):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=False) == False:
+            res = jsend.fail(data=serializer.errors)  # jsend 적용
+            return Response(res)
+
+        user = self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        res = jsend.success(self.get_response_data(user))  # jsend 적용
+        return Response(res, status=status.HTTP_201_CREATED, headers=headers)
