@@ -5,11 +5,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import response
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
+from rest_framework.generics import GenericAPIView
 
 from allauth.account import app_settings as allauth_settings
 from rest_auth.app_settings import TokenSerializer
@@ -18,7 +21,7 @@ from rest_auth.views import LoginView, LogoutView
 from rest_auth.registration.views import RegisterView
 
 from .models import CustomUser
-from .serializers import UserCheckSerializer
+from .serializers import UserCheckSerializer, FindEmailSerializer
 
 
 @api_view(["GET"])
@@ -37,12 +40,15 @@ def api_root(request, format=None):
             "logged_in_user": reverse(
                 "rest_user_details", request=request, format=format
             ),
+            "find_email": reverse("find_email", request=request, format=format),
         }
     )
 
 
 # 회원 여부 체크
 class UserCheck(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request, email, format=None):
         email = CustomUser.objects.filter(email=email)
         serializer = UserCheckSerializer(email)
@@ -50,6 +56,7 @@ class UserCheck(APIView):
         return Response(res)
 
 
+# 로그인
 # rest_auth.views.LoginView overriding
 class LoginView(LoginView):
     def get_response(self):
@@ -95,6 +102,7 @@ class LoginView(LoginView):
         return self.get_response()
 
 
+# 로그아웃
 # rest_auth.views.LogoutView overriding
 class LogoutView(LogoutView):
     def logout(self, request):
@@ -115,6 +123,7 @@ class LogoutView(LogoutView):
         return response
 
 
+# 회원 가입
 # rest_auth.registration.views.RegisterView overriding
 class RegisterView(RegisterView):
     def create(self, request, *args, **kwargs):
@@ -129,3 +138,27 @@ class RegisterView(RegisterView):
 
         res = jsend.success(self.get_response_data(user))  # jsend 적용
         return Response(res, status=status.HTTP_201_CREATED, headers=headers)
+
+
+# 이메일 찾기
+class FindEmailView(GenericAPIView):
+    serializer_class = FindEmailSerializer
+    permissions = (AllowAny,)
+
+    def get_object(self, request):
+        user_email = CustomUser.objects.filter(
+            phone_number=request.data["phone_number"],
+            date_of_birth=request.data["date_of_birth"],
+        )
+        return user_email
+
+    def post(self, request, format=None):
+        serializer = FindEmailSerializer(data=request.data)  # input 유효성 검사
+        if serializer.is_valid() == False:
+            res = jsend.fail(data=serializer.errors)
+            return Response(res)
+
+        user_email = self.get_object(request)
+        serializer = FindEmailSerializer(user_email)
+        res = jsend.success(data=serializer.data)
+        return Response(res)

@@ -60,3 +60,19 @@ class RegisterSerializer(RegisterSerializer):
         user.date_of_birth = self.data.get("date_of_birth")
         user.save()
         return user
+
+
+class FindEmailSerializer(serializers.ModelSerializer):
+    user_email = serializers.SerializerMethodField()
+    phone_number = serializers.CharField(max_length=11, write_only=True)
+    date_of_birth = serializers.CharField(max_length=8, write_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ["user_email", "phone_number", "date_of_birth"]
+
+    def get_user_email(self, instance):
+        if instance:
+            return instance[0].email
+        else:
+            return None

@@ -7,8 +7,7 @@ from rest_auth.views import (
     UserDetailsView,
 )
 
-from .views import UserCheck, LoginView, LogoutView
-from .views import RegisterView
+from .views import UserCheck, LoginView, LogoutView, RegisterView, FindEmailView
 
 urlpatterns = [
     path(
@@ -31,5 +30,6 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path("check/<str:email>/", UserCheck.as_view()),
+    path("api/email/check/<str:email>/", UserCheck.as_view()),
+    path("api/email/find/", FindEmailView.as_view(), name="find_email"),
 ]
