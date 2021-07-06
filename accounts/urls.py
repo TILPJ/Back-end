@@ -1,25 +1,23 @@
 from django.urls import path
 
 from rest_auth.views import (
-    PasswordChangeView,
-    PasswordResetView,
-    PasswordResetConfirmView,
     UserDetailsView,
 )
 
-from .views import UserCheck, LoginView, LogoutView, RegisterView, FindEmailView
+from .views import (
+    UserCheck,
+    LoginView,
+    LogoutView,
+    RegisterView,
+    FindEmailView,
+    PasswordChangeView,
+)
 
 urlpatterns = [
-    path(
-        "api/password/reset/", PasswordResetView.as_view(), name="rest_password_reset"
-    ),
-    path(
-        "api/password/reset/confirm/<uidb64>/<token>/",
-        PasswordResetConfirmView.as_view(),
-        name="rest_password_reset_confirm",
-    ),
+    path("api/email/check/<str:email>/", UserCheck.as_view()),
     path("api/login/", LoginView.as_view(), name="rest_login"),
     path("api/logout/", LogoutView.as_view(), name="rest_logout"),
+    path("api/email/find/", FindEmailView.as_view(), name="find_email"),
     path(
         "api/password/change/",
         PasswordChangeView.as_view(),
@@ -27,9 +25,4 @@ urlpatterns = [
     ),
     path("api/registration/", RegisterView.as_view(), name="rest_register"),
     path("api/user/", UserDetailsView.as_view(), name="rest_user_details"),
-]
-
-urlpatterns += [
-    path("api/email/check/<str:email>/", UserCheck.as_view()),
-    path("api/email/find/", FindEmailView.as_view(), name="find_email"),
 ]

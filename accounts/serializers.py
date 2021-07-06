@@ -1,8 +1,8 @@
 from django.utils import translation
-import jsend
+from django.conf import settings
 
 from rest_framework import serializers, exceptions
-from rest_auth.serializers import LoginSerializer
+from rest_auth.serializers import LoginSerializer, PasswordChangeSerializer
 from rest_auth.registration.serializers import RegisterSerializer
 
 from .models import CustomUser
@@ -76,3 +76,19 @@ class FindEmailSerializer(serializers.ModelSerializer):
             return instance[0].email
         else:
             return None
+
+
+class PasswordChangeSerializer(PasswordChangeSerializer):
+    user_email = serializers.EmailField(write_only=True)
+    new_password1 = serializers.CharField(
+        max_length=128, style={"input_type": "password"}
+    )
+    new_password2 = serializers.CharField(
+        max_length=128, style={"input_type": "password"}
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(PasswordChangeSerializer, self).__init__(*args, **kwargs)
+        user_email = self.request.data.get("user_email")
+        if user_email:
+            self.user = CustomUser.objects.get(email=user_email)

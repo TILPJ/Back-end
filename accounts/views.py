@@ -17,11 +17,15 @@ from rest_framework.generics import GenericAPIView
 from allauth.account import app_settings as allauth_settings
 from rest_auth.app_settings import TokenSerializer
 
-from rest_auth.views import LoginView, LogoutView
+from rest_auth.views import LoginView, LogoutView, PasswordChangeView
 from rest_auth.registration.views import RegisterView
 
 from .models import CustomUser
-from .serializers import UserCheckSerializer, FindEmailSerializer
+from .serializers import (
+    UserCheckSerializer,
+    FindEmailSerializer,
+    PasswordChangeSerializer,
+)
 
 
 @api_view(["GET"])
@@ -30,17 +34,14 @@ def api_root(request, format=None):
         {
             "login": reverse("rest_login", request=request, format=format),
             "logout": reverse("rest_logout", request=request, format=format),
+            "find_email": reverse("find_email", request=request, format=format),
             "password_change": reverse(
                 "rest_password_change", request=request, format=format
-            ),
-            "password_reset": reverse(
-                "rest_password_reset", request=request, format=format
             ),
             "register": reverse("rest_register", request=request, format=format),
             "logged_in_user": reverse(
                 "rest_user_details", request=request, format=format
             ),
-            "find_email": reverse("find_email", request=request, format=format),
         }
     )
 
@@ -161,4 +162,24 @@ class FindEmailView(GenericAPIView):
         user_email = self.get_object(request)
         serializer = FindEmailSerializer(user_email)
         res = jsend.success(data=serializer.data)
+        return Response(res)
+
+
+# 비밀번호 변경
+# rest_auth.views.PasswordChangeView overriding
+class PasswordChangeView(PasswordChangeView):
+    serializer_class = PasswordChangeSerializer
+    permission_classes = []
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=False) == False:
+            res = jsend.fail(data=serializer.errors)  # jsend 적용
+            return Response(res)
+
+        serializer.save()
+        res = jsend.success(
+            data={"detail": _("New password has been saved.")}
+        )  # jsend 적용
         return Response(res)
