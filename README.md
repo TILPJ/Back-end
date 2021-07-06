@@ -1,6 +1,11 @@
 # Overview
 
 # Features
+- 회원 여부 체크
+- 회원가입
+- 로그인/로그아웃
+- 이메일 찾기
+- 비밀번호 변경 
 
 # Tech Stack
 - Language : Python 3.8.10
