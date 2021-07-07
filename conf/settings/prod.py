@@ -15,5 +15,6 @@ DATABASES = {
         "USER": os.getenv("PROD_DATABASE_USER"),
         "PASSWORD": os.getenv("PROD_DATABASE_PASSWORD"),
         "HOST": os.getenv("PROD_DATABASE_HOST"),
+        "PORT": os.getenv("PROD_DATABASE_PORT"),
     }
 }
