@@ -32,6 +32,7 @@ from .serializers import (
 def api_root(request, format=None):
     return Response(
         {
+            "email_check": reverse("rest_email_check", request=request, format=format),
             "login": reverse("rest_login", request=request, format=format),
             "logout": reverse("rest_logout", request=request, format=format),
             "find_email": reverse("find_email", request=request, format=format),
@@ -50,8 +51,13 @@ def api_root(request, format=None):
 class UserCheck(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request, email, format=None):
-        email = CustomUser.objects.filter(email=email)
+    def get(self, request, format=None):
+        if not self.request.query_params:
+            res = jsend.fail(data={"message": "Please enter your email"})
+            return Response(res)
+
+        email_param = self.request.query_params.get("email", default="")
+        email = CustomUser.objects.filter(email=email_param)
         serializer = UserCheckSerializer(email)
         res = jsend.success(data=serializer.data)
         return Response(res)
