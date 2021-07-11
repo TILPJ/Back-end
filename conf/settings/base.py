@@ -46,6 +46,7 @@ DJANGO_APPS = [
     "allauth.account",
     "rest_auth.registration",
     "drf_yasg",
+    "corsheaders",
 ]
 
 PROJECT_APPS = [
@@ -55,6 +56,7 @@ PROJECT_APPS = [
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -175,3 +177,5 @@ LOGOUT_ON_PASSWORD_CHANGE = True
 SITE_ID = 1
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+CORS_ORIGIN_ALLOW_ALL = True
