@@ -2,6 +2,7 @@ from django.utils import translation
 from django.conf import settings
 
 from rest_framework import serializers, exceptions
+from rest_framework.validators import UniqueValidator
 from rest_auth.serializers import LoginSerializer, PasswordChangeSerializer
 from rest_auth.registration.serializers import RegisterSerializer
 
@@ -40,7 +41,15 @@ class RegisterSerializer(RegisterSerializer):
     username = None
     password1 = serializers.CharField(write_only=True, style={"input_type": "password"})
     password2 = serializers.CharField(write_only=True, style={"input_type": "password"})
-    phone_number = serializers.CharField(max_length=11)
+    phone_number = serializers.CharField(
+        max_length=11,
+        validators=[
+            UniqueValidator(
+                queryset=CustomUser.objects.all(),
+                message=("Phone number already exists"),
+            )
+        ],
+    )
     date_of_birth = serializers.CharField(max_length=8)
 
     class Meta:

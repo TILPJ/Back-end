@@ -14,7 +14,7 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
-    phone_number = models.CharField(max_length=11, blank=False)
+    phone_number = models.CharField(max_length=11, blank=False, unique=True)
     date_of_birth = models.CharField(max_length=8, blank=False)
 
     def __str__(self):
