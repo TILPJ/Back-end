@@ -51,6 +51,7 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     "accounts.apps.AccountsConfig",
+    "courses.apps.CoursesConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
