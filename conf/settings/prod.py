@@ -10,7 +10,7 @@ STATICFILES_DIRS = []
 
 # DATABASES = {
 #     "default": {
-#         "ENGINE": "django.db.backends.mysql",
+#         "ENGINE": os.getenv("PROD_DATABASE_ENGINE"),
 #         "NAME": os.getenv("PROD_DATABASE_NAME"),
 #         "USER": os.getenv("PROD_DATABASE_USER"),
 #         "PASSWORD": os.getenv("PROD_DATABASE_PASSWORD"),
