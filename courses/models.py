@@ -62,7 +62,7 @@ class ClipperSection(models.Model):
 class MyCourse(models.Model):
     owner = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE)
     site = models.ForeignKey("ClipperSite", on_delete=models.CASCADE)
-    course_info = models.ForeignKey("ClipperCourse", on_delete=models.CASCADE)
+    course = models.ForeignKey("ClipperCourse", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.course_info.title
