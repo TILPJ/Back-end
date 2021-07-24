@@ -43,7 +43,8 @@ def api_root(request, format=None):
             "logged_in_user": reverse(
                 "rest_user_details", request=request, format=format
             ),
-            "mycourses": reverse("mycourses_list", request=request, format=format),
+            "mycourses": reverse("mycourse_list", request=request, format=format),
+            "sites": reverse("site_list", request=request, format=format),
         }
     )
 

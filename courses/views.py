@@ -1,13 +1,36 @@
 import jsend
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import MyCourse
-from .serializers import MyCourseSerializer
+from .models import ClipperSite, ClipperCourse, MyCourse
+from .serializers import ClipperSiteSerializer, MyCourseSerializer
+
+
+class SiteList(GenericAPIView):
+    serializer_class = ClipperSiteSerializer
+    permission_classes = (AllowAny,)
+
+    def get(self, request, format=None):
+        # 사이트명으로 검색하는 경우
+        if request.query_params:
+            search_param = self.request.query_params.get("search", default="")
+            sites = ClipperSite.objects.filter(
+                Q(name__icontains=search_param)
+            ).distinct()
+            serializer = ClipperSiteSerializer(sites, many=True)
+            res = jsend.success(data={"sites": serializer.data})
+            return Response(res)
+
+        # 검색 조건이 없는 경우
+        sites = ClipperSite.objects.all()
+        serializer = ClipperSiteSerializer(sites, many=True)
+        res = jsend.success(data={"sites": serializer.data})
+        return Response(res)
 
 
 class MyCourseList(GenericAPIView):

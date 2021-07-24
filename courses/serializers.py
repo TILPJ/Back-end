@@ -6,21 +6,32 @@ from .models import ClipperSite, ClipperCourse, ClipperChapter, ClipperSection, 
 class ClipperSiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClipperSite
-        fields = ["name"]
+        fields = ["id", "name"]
 
 
 class ClipperCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClipperCourse
-        fields = ["title", "instructor"]
+        fields = [
+            "id",
+            "title",
+            "instructor",
+            "thumbnail_link",
+            "description",
+            "course_link",
+        ]
 
 
 class MyCourseSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.email")
     site_info = ClipperSiteSerializer(source="site", read_only=True)
     course_info = ClipperCourseSerializer(source="course", read_only=True)
-    site = serializers.PrimaryKeyRelatedField(queryset=ClipperSite.objects.all())
-    course = serializers.PrimaryKeyRelatedField(queryset=ClipperCourse.objects.all())
+    site = serializers.PrimaryKeyRelatedField(
+        queryset=ClipperSite.objects.all(), write_only=True
+    )
+    course = serializers.PrimaryKeyRelatedField(
+        queryset=ClipperCourse.objects.all(), write_only=True
+    )
 
     class Meta:
         model = MyCourse
