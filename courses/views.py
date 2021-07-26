@@ -8,7 +8,11 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import ClipperSite, ClipperCourse, MyCourse
-from .serializers import ClipperSiteSerializer, MyCourseSerializer
+from .serializers import (
+    ClipperCourseSerializer,
+    ClipperSiteSerializer,
+    MyCourseSerializer,
+)
 
 
 class SiteList(GenericAPIView):
@@ -30,6 +34,37 @@ class SiteList(GenericAPIView):
         sites = ClipperSite.objects.all()
         serializer = ClipperSiteSerializer(sites, many=True)
         res = jsend.success(data={"sites": serializer.data})
+        return Response(res)
+
+
+class CourseList(GenericAPIView):
+    serializer_class = ClipperCourseSerializer
+    permission_classes = (AllowAny,)
+
+    def get(self, request, format=None):
+        # 강의명으로 검색하거나, 학습사이트별로 필터링하는 경우
+        if request.query_params:
+            search_param = self.request.query_params.get("search", default="")
+            site_param = self.request.query_params.get("site", default="")
+            if site_param != "":
+                try:
+                    site_id = ClipperSite.objects.get(name=site_param).id
+                except:
+                    res = jsend.fail(data={"detail": "site does not exist."})
+                    return Response(res)
+            else:
+                site_id = 1
+            courses = ClipperCourse.objects.filter(
+                Q(title__icontains=search_param) & Q(site_id=site_id)
+            )
+            serializer = ClipperCourseSerializer(courses, many=True)
+            res = jsend.success(data={"courses": serializer.data})
+            return Response(res)
+
+        # 검색 또는 필터링 조건이 없는 경우
+        courses = ClipperCourse.objects.all()
+        serializer = ClipperCourseSerializer(courses, many=True)
+        res = jsend.success(data={"courses": serializer.data})
         return Response(res)
 
 
