@@ -52,6 +52,7 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     "accounts.apps.AccountsConfig",
     "courses.apps.CoursesConfig",
+    "tils.apps.TilsConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
@@ -180,3 +181,5 @@ SITE_ID = 1
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+DATE_INPUT_FORMAT = ["%d-%m-%Y"]

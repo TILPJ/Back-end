@@ -65,4 +65,4 @@ class MyCourse(models.Model):
     course = models.ForeignKey("ClipperCourse", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.course_info.title
+        return self.course.title
