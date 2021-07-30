@@ -108,6 +108,21 @@ class MyCourseDetail(GenericAPIView):
         res = jsend.success(data=serializer.data)
         return Response(res)
 
+    def put(self, request, mycourse_id, format=None):
+        try:
+            mycourse = self.get_object(mycourse_id)
+        except:
+            res = jsend.fail(data={"detail": _("This is not a registered")})
+            return Response(res)
+
+        serializer = MyCourseSerializer(mycourse, data=request.data)
+        if serializer.is_valid() == False:
+            res = jsend.fail(data=serializer.errors)
+            return Response(res)
+        serializer.save()
+        res = jsend.success(data={"detail": _("Successfully modified.")})
+        return Response(res)
+
     def delete(self, request, mycourse_id, format=None):
         try:
             mycourse = self.get_object(mycourse_id)
