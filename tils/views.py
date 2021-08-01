@@ -107,6 +107,3 @@ class TilDetail(GenericAPIView):
         til.delete()
         res = jsend.success(data={"detail": _("Successfully deleted.")})
         return Response(res)
-
-    # 자기 자신이 등록한 학습 강의의 사이트를 조회
-    # 학습 강의 선택시 해당 강의의 챕터별로 조회
