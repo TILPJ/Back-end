@@ -11,13 +11,6 @@ class TilSerializer(serializers.ModelSerializer):
     mycourse = serializers.PrimaryKeyRelatedField(
         queryset=MyCourse.objects.all(), write_only=True
     )
-
-    # def get_user_id(email):
-    #     if
-    #     print("========", CustomUser.objects.filter(email=email))
-
-    #     return CustomUser.objects.filter(email=email)
-
     section = serializers.PrimaryKeyRelatedField(
         queryset=ClipperSection.objects.all(),
         write_only=True,
