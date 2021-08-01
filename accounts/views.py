@@ -46,6 +46,7 @@ def api_root(request, format=None):
             "mycourses": reverse("mycourse_list", request=request, format=format),
             "sites": reverse("site_list", request=request, format=format),
             "courses": reverse("course_list", request=request, format=format),
+            "sections": reverse("section_list", request=request, format=format),
             "tils": reverse("til_list", request=request, format=format),
         }
     )

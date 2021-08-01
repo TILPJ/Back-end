@@ -22,6 +22,12 @@ class ClipperCourseSerializer(serializers.ModelSerializer):
         ]
 
 
+class ClipperSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClipperSection
+        fields = ["id", "name"]
+
+
 class MyCourseSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.email")
     site_info = ClipperSiteSerializer(source="site", read_only=True)
