@@ -42,3 +42,15 @@ class MyCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyCourse
         fields = ["id", "owner", "site", "course", "site_info", "course_info"]
+
+
+class MySiteSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source="owner.email")
+    site_name = serializers.SerializerMethodField()
+
+    def get_site_name(self, obj):
+        return obj.site.name
+
+    class Meta:
+        model = MyCourse
+        fields = ["owner", "site_name"]

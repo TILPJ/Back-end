@@ -8,4 +8,5 @@ urlpatterns = [
     path("sites/", views.SiteList.as_view(), name="site_list"),
     path("courses/", views.CourseList.as_view(), name="course_list"),
     path("sections/", views.SectionList.as_view(), name="section_list"),
+    path("mysites/", views.MySiteList.as_view(), name="mysite_list"),
 ]

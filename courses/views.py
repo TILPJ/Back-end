@@ -13,6 +13,7 @@ from .serializers import (
     ClipperSiteSerializer,
     ClipperSectionSerializer,
     MyCourseSerializer,
+    MySiteSerializer,
 )
 
 
@@ -84,6 +85,17 @@ class SectionList(GenericAPIView):
         else:
             res = jsend.fail(data={"detail": _("Please enter the course id.")})
             return Response(res)
+
+
+class MySiteList(GenericAPIView):
+    serializer_class = MySiteSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, fotmat=None):
+        sites = MyCourse.objects.filter(owner=request.user).distinct("site")
+        serializer = MySiteSerializer(sites, many=True)
+        res = jsend.success(data={"mysites": serializer.data})
+        return Response(res)
 
 
 class MyCourseList(GenericAPIView):
