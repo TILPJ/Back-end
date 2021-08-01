@@ -7,10 +7,11 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import ClipperSite, ClipperCourse, MyCourse
+from .models import ClipperSite, ClipperCourse, ClipperSection, MyCourse
 from .serializers import (
     ClipperCourseSerializer,
     ClipperSiteSerializer,
+    ClipperSectionSerializer,
     MyCourseSerializer,
 )
 
@@ -66,6 +67,23 @@ class CourseList(GenericAPIView):
         serializer = ClipperCourseSerializer(courses, many=True)
         res = jsend.success(data={"courses": serializer.data})
         return Response(res)
+
+
+class SectionList(GenericAPIView):
+    serializer_class = ClipperSectionSerializer
+    permission_classes = (AllowAny,)
+
+    def get(self, request, format=None):
+        # 강의별로 필터링
+        if request.query_params:
+            course_param = int(self.request.query_params.get("course", default=0))
+            sections = ClipperSection.objects.filter(chapter__course=course_param)
+            serializer = ClipperSectionSerializer(sections, many=True)
+            res = jsend.success(data={"sections": serializer.data})
+            return Response(res)
+        else:
+            res = jsend.fail(data={"detail": _("Please enter the course id.")})
+            return Response(res)
 
 
 class MyCourseList(GenericAPIView):
