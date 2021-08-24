@@ -8,13 +8,8 @@ from accounts.models import CustomUser
 
 class TilSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.email")
-    mycourse = serializers.PrimaryKeyRelatedField(
-        queryset=MyCourse.objects.all(), write_only=True
-    )
-    section = serializers.PrimaryKeyRelatedField(
-        queryset=ClipperSection.objects.all(),
-        write_only=True,
-    )
+    mycourse = serializers.PrimaryKeyRelatedField(queryset=MyCourse.objects.all())
+    section = serializers.PrimaryKeyRelatedField(queryset=ClipperSection.objects.all())
     course_title = serializers.SerializerMethodField()
     section_name = serializers.SerializerMethodField()
     site_name = serializers.SerializerMethodField()
@@ -34,11 +29,11 @@ class TilSerializer(serializers.ModelSerializer):
             "id",
             "owner",
             "date",
-            "mycourse",
-            "section",
             "star",
             "memo",
             "site_name",
+            "mycourse",
             "course_title",
+            "section",
             "section_name",
         ]
